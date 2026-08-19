@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ABNT 6023 — Gerador de Referências</title>
+<style>
+:root{--ink:#18324a;--muted:#687789;--line:#dce4ea;--bg:#f5f8fa;--card:#fff;--accent:#176b87;--accent2:#e8f4f7}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#123b52,#176b87);color:#fff;padding:28px 20px 34px} .wrap{max-width:1000px;margin:auto}
+.brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.tag{opacity:.85;margin-top:6px}
+main{margin:-18px auto 40px;max-width:1000px;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 30px #123b5212;padding:24px;margin-bottom:18px}
+h1{font-size:30px;margin:0 0 8px;letter-spacing:-1px}.lead{color:var(--muted);margin:0 0 20px}
+.search{display:flex;gap:10px}.search input{flex:1}.search button{white-space:nowrap}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);margin:22px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.type{border:1px solid var(--line);background:#fff;border-radius:14px;padding:16px;text-align:left;cursor:pointer;transition:.15s}.type:hover{border-color:var(--accent);transform:translateY(-1px);background:var(--accent2)}.icon{font-size:25px}.type b{display:block;margin-top:8px}.type span{font-size:12px;color:var(--muted)}
+.hidden{display:none}.crumb{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{font-size:13px;font-weight:700;display:block;margin-bottom:6px}.req{color:#b24b35}.field small{display:block;color:var(--muted);margin-top:5px}
+input,select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}input:focus,select:focus{outline:2px solid #9ed1dd;border-color:var(--accent)}
+.full{grid-column:1/-1}.toggle{display:flex;align-items:center;gap:9px;margin:4px 0}.toggle input{width:auto}.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:12px 17px;font-weight:750;font:inherit;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#edf2f5;color:var(--ink)}.result{background:#f8fbfc;border:1px solid var(--line);border-radius:12px;padding:18px;line-height:1.65}.result em{font-style:italic}.ok{color:#176b87;font-weight:700;margin-bottom:8px}.note{font-size:12px;color:var(--muted);margin-top:12px}
+@media(max-width:700px){.types{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}.search{flex-direction:column}}
+@media(max-width:430px){.types{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">ABNT 6023</div><div class="tag">Gerador de referências — protótipo</div></div></header>
+<main>
+<section class="card">
+<h1>Gere sua referência em poucos passos.</h1>
+<p class="lead">Você não precisa conhecer a ABNT. O aplicativo conhece a ABNT.</p>
+<div class="search"><input id="quick" placeholder="Cole DOI, URL ou ISBN (protótipo)"><button class="primary" onclick="quickSearch()">Buscar</button></div>
+<div class="divider">ou escolha o tipo de documento</div>
+<div class="types">
+<button class="type" onclick="openBook()"><div class="icon">📚</div><b>Livro</b><span>Monografia no todo</span></button>
+<button class="type" disabled><div class="icon">📖</div><b>Capítulo</b><span>Em breve</span></button>
+<button class="type" disabled><div class="icon">📰</div><b>Artigo</b><span>Em breve</span></button>
+<button class="type" disabled><div class="icon">🎓</div><b>TCC / dissertação / tese</b><span>Em breve</span></button>
+<button class="type" disabled><div class="icon">🎤</div><b>Evento</b><span>Em breve</span></button>
+<button class="type" disabled><div class="icon">🌐</div><b>Site / eletrônico</b><span>Em breve</span></button>
+</div>
+</section>
+
+<section id="book" class="card hidden">
+<div class="crumb">Início → Livro</div>
+<h2>Livro</h2>
+<p class="lead">Preencha os dados essenciais. Os campos opcionais aparecem somente quando necessários.</p>
+<div class="grid">
+<div class="field full"><label>Autor <span class="req">*</span></label><input id="author" placeholder="Ex.: Luck, Heloísa"><small>Para vários autores, separe por ponto e vírgula.</small></div>
+<div class="field"><label>Título <span class="req">*</span></label><input id="title" placeholder="Ex.: Liderança em gestão escolar"></div>
+<div class="field"><label>Subtítulo</label><input id="subtitle" placeholder="Se houver"></div>
+<div class="field"><label>Edição</label><input id="edition" placeholder="Ex.: 4"></div>
+<div class="field"><label>Local <span class="req">*</span></label><input id="place" placeholder="Ex.: Petrópolis"></div>
+<div class="field"><label>Editora <span class="req">*</span></label><input id="publisher" placeholder="Ex.: Vozes"></div>
+<div class="field"><label>Ano <span class="req">*</span></label><input id="year" inputmode="numeric" placeholder="Ex.: 2010"></div>
+<div class="field full"><label class="toggle"><input id="online" type="checkbox" onchange="toggleOnline()"> É um documento online?</label></div>
+<div id="onlineFields" class="field full hidden">
+<div class="grid">
+<div class="field"><label>DOI</label><input id="doi" placeholder="Ex.: https://doi.org/..."></div>
+<div class="field"><label>URL</label><input id="url" placeholder="https://..."></div>
+<div class="field"><label>Data de acesso</label><input id="access" type="date"></div>
+</div>
+</div>
+</div>
+<div class="actions"><button class="primary" onclick="generate()">Gerar referência</button><button class="secondary" onclick="resetBook()">Limpar</button></div>
+</section>
+
+<section id="output" class="card hidden">
+<div class="ok">✓ Referência gerada</div>
+<div id="reference" class="result"></div>
+<div class="actions"><button class="primary" onclick="copyRef()">Copiar referência</button><button class="secondary" onclick="editRef()">Editar</button><button class="secondary" onclick="newRef()">Nova referência</button></div>
+<div class="note">Protótipo: a lógica do módulo Livro está baseada na ABNT NBR 6023:2025. A versão de produção deverá validar todos os casos e exceções previstos na norma.</div>
+</section>
+</main>
+<script>
+function openBook(){document.getElementById('book').classList.remove('hidden');document.getElementById('book').scrollIntoView({behavior:'smooth'})}
+function toggleOnline(){document.getElementById('onlineFields').classList.toggle('hidden',!document.getElementById('online').checked)}
+function clean(s){return (s||'').trim()}
+function authorFmt(raw){
+ let a=clean(raw); if(!a) return '';
+ return a.split(';').map(x=>{x=x.trim(); if(!x) return ''; if(x.includes(',')) return x.toUpperCase(); let p=x.split(/\s+/); let last=p.pop(); return (last+', '+p.join(' ')).toUpperCase()}).filter(Boolean).join('; ')
+}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function generate(){
+ const a=clean(document.getElementById('author').value),t=clean(document.getElementById('title').value),p=clean(document.getElementById('place').value),pub=clean(document.getElementById('publisher').value),y=clean(document.getElementById('year').value);
+ if(!a||!t||!p||!pub||!y){alert('Preencha os campos obrigatórios: autor, título, local, editora e ano.');return}
+ const sub=clean(document.getElementById('subtitle').value),ed=clean(document.getElementById('edition').value);
+ let s=authorFmt(a)+'. '+escapeHtml(t)+(sub?': '+escapeHtml(sub):'')+'. ';
+ if(ed) s+=escapeHtml(ed)+'. ed. ';
+ s+=escapeHtml(p)+': '+escapeHtml(pub)+', '+escapeHtml(y)+'.';
+ if(document.getElementById('online').checked){
+   const doi=clean(document.getElementById('doi').value),url=clean(document.getElementById('url').value),ac=document.getElementById('access').value;
+   s+=' E-book.';
+   if(doi) s+=' DOI: '+escapeHtml(doi)+'.';
+   else if(url) s+=' Disponível em: '+escapeHtml(url)+'.';
+   if(ac){let [yy,mm,dd]=ac.split('-');s+=' Acesso em: '+dd+' '+['jan.','fev.','mar.','abr.','maio','jun.','jul.','ago.','set.','out.','nov.','dez.'][+mm-1]+' '+yy+'.';}
+ }
+ document.getElementById('reference').innerHTML=s;
+ document.getElementById('output').classList.remove('hidden');document.getElementById('output').scrollIntoView({behavior:'smooth'});
+}
+function copyRef(){let el=document.getElementById('reference');let text=el.innerText;navigator.clipboard?.writeText(text);alert('Referência copiada.')}
+function editRef(){document.getElementById('book').scrollIntoView({behavior:'smooth'})}
+function resetBook(){document.querySelectorAll('#book input').forEach(x=>{if(x.type==='checkbox')x.checked=false;else x.value=''});toggleOnline();document.getElementById('output').classList.add('hidden')}
+function newRef(){resetBook();window.scrollTo({top:0,behavior:'smooth'})}
+function quickSearch(){let v=clean(document.getElementById('quick').value); if(!v){alert('Cole um DOI, URL ou ISBN para testar.');return} openBook(); alert('No protótipo, a busca automática ainda não consulta bases externas. O próximo passo será conectar DOI/ISBN/URL à identificação dos dados.')}
+</script>
+</body>
+</html>
